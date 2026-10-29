@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Portfolio case study: an n8n and Google Gemini workflow that validates sample air-conditioning service inquiries, scores leads, assigns a technician, logs to Google Sheets, and routes Gmail notifications.">
+<title>AI-Powered Lead Qualification & CRM Automation | Jerome Hipolito</title>
+<style>
+:root{--bg:#06111f;--panel:#0b1d31;--panel2:#102842;--line:#1d3d5b;--text:#edf5ff;--muted:#a9c0d9;--blue:#1687ff;--cyan:#4de6f1;--green:#72e6b2;--amber:#ffd166;--red:#ff8585;--radius:18px;--max:1120px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#10345a 0,transparent 38%),var(--bg);color:var(--text);font:16px/1.65 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:#7dc5ff}a:hover{color:#b8e3ff}.wrap{width:min(var(--max),calc(100% - 40px));margin:auto}.topbar{padding:22px 0;border-bottom:1px solid var(--line)}.nav{display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{font-weight:800;letter-spacing:.02em;color:var(--text);text-decoration:none}.nav small{color:var(--muted)}.hero{padding:76px 0 46px}.eyebrow{display:inline-block;color:var(--cyan);font-size:.8rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.hero h1{font-size:clamp(2.3rem,5.3vw,4.6rem);line-height:1.04;letter-spacing:-.045em;max-width:900px;margin:18px 0}.hero h1 span{color:var(--blue)}.lede{font-size:1.15rem;color:var(--muted);max-width:820px}.meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px}.pill{border:1px solid #285073;background:#0b2036;border-radius:99px;padding:6px 12px;color:#c9e3ff;font-size:.87rem}.section{padding:27px 0}.section h2{font-size:clamp(1.5rem,3vw,2.15rem);line-height:1.2;margin:0 0 17px;letter-spacing:-.025em}.section h3{font-size:1.08rem;margin:0 0 8px}.section p{color:#d2e0ef}.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}.card{grid-column:span 6;background:linear-gradient(145deg,rgba(16,40,66,.96),rgba(8,25,43,.96));border:1px solid var(--line);border-radius:var(--radius);padding:22px;min-width:0}.card.full{grid-column:1/-1}.card.third{grid-column:span 4}.card p:last-child{margin-bottom:0}.label{color:var(--cyan);font-size:.76rem;text-transform:uppercase;letter-spacing:.12em;font-weight:800;margin-bottom:8px}.muted{color:var(--muted)!important}.flow{display:grid;grid-template-columns:repeat(7,minmax(105px,1fr));gap:9px;overflow-x:auto;padding:8px 2px 14px}.node{min-height:108px;border:1px solid #2a567b;border-radius:13px;background:#0d2742;padding:13px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}.node .num{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#113b66;color:var(--cyan);font-weight:800;font-size:.8rem}.node strong{font-size:.86rem;line-height:1.25}.node small{color:var(--muted);font-size:.73rem}.arrow{color:var(--blue);text-align:center;font-size:1.4rem;align-self:center}.results{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden}.results th,.results td{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top}.results th{color:#bfe3ff;background:#0c233a;font-size:.85rem}.results td{color:#d8e6f5}.status{display:inline-block;padding:3px 9px;border-radius:99px;font-size:.78rem;font-weight:800;white-space:nowrap}.pass{color:var(--green);background:#0c3a32;border:1px solid #1c725f}.pending{color:var(--amber);background:#3d3011;border:1px solid #8c6b1c}.caution{border-left:3px solid var(--amber);padding:14px 17px;background:#211c11;border-radius:0 12px 12px 0;color:#f8e8bf}.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:15px 0}.stat{background:#07182a;border:1px solid var(--line);border-radius:14px;padding:18px}.stat strong{display:block;font-size:1.75rem;line-height:1.2;color:var(--cyan)}.stat span{display:block;margin-top:6px;color:var(--muted);font-size:.87rem}.list{padding-left:20px;color:#d2e0ef}.list li{margin:6px 0}.footer{margin-top:45px;padding:28px 0 45px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}.cta{display:inline-block;background:linear-gradient(90deg,#087cff,#1fb7ef);color:white;text-decoration:none;font-weight:800;padding:11px 17px;border-radius:10px;margin-top:5px}.callout{font-size:.92rem;color:var(--muted)}code{font-size:.9em;color:#bcf4fa;background:#09243b;padding:2px 5px;border-radius:5px}
+@media(max-width:760px){.wrap{width:min(100% - 26px,var(--max))}.hero{padding:52px 0 28px}.card,.card.third{grid-column:1/-1}.statgrid{grid-template-columns:1fr}.topbar .nav{align-items:flex-start;flex-direction:column}.flow{grid-template-columns:repeat(7,130px)}}
+@media print{body{background:white;color:#111}.topbar,.footer{color:#333}.card,.node,.stat{background:white;color:#111;border-color:#aaa;break-inside:avoid}.card p,.section p,.list,.results td,.muted{color:#222!important}.pill{color:#111;background:white;border-color:#aaa}.hero h1 span,.eyebrow,.label{color:#0755aa}.caution{background:#fff6d9;color:#111}.section{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="wrap nav"><a class="brand" href="./index.html">JH. Portfolio</a><small>Automation Portfolio · Case Study 01</small></div></header>
+<main class="wrap">
+<section class="hero">
+  <div class="eyebrow">n8n · AI Workflow Automation · Portfolio Project</div>
+  <h1>AI-Powered Lead Qualification <span>&amp;</span> CRM Automation</h1>
+  <p class="lede">A test workflow for an air-conditioning service business that validates incoming inquiries, uses Google Gemini to score a lead, creates a traceable lead ID, assigns a technician, records the lead in Google Sheets, and routes email notifications based on the lead temperature.</p>
+  <div class="meta"><span class="pill">n8n Cloud</span><span class="pill">Google Gemini</span><span class="pill">Google Sheets</span><span class="pill">Gmail</span><span class="pill">End-to-end test: 1 sample lead</span></div>
+</section>
+<section class="section grid">
+  <article class="card"><div class="label">The challenge</div><h2>Problem</h2><p>Manual inquiry handling can leave customer details incomplete, make lead prioritization inconsistent, and delay staff follow-up. A small service team needs a repeatable way to validate each inquiry, assess its urgency, create a reference, and keep an accessible CRM record.</p></article>
+  <article class="card"><div class="label">The approach</div><h2>Solution</h2><p>I built an n8n workflow that combines rule-based validation, Gemini-generated lead assessment, structured JSON parsing, lead identification, technician assignment, Google Sheets logging, and Gmail notification routing.</p><p class="muted">The workflow is demonstrated with sample/test data. It is not represented as a production deployment or a live customer system.</p></article>
+</section>
+<section class="section">
+  <h2>Workflow architecture</h2>
+  <p class="muted">The tested path runs from manual sample input through validation and AI scoring to assignment. The assigned lead then branches to CRM logging and notifications.</p>
+  <div class="flow" aria-label="Workflow sequence">
+    <div class="node"><span class="num">1</span><strong>Lead Input</strong><small>Sample inquiry</small></div>
+    <div class="node"><span class="num">2</span><strong>Validate Lead</strong><small>Required fields &amp; allowed values</small></div>
+    <div class="node"><span class="num">3</span><strong>Gemini Scoring</strong><small>Score, temperature, action</small></div>
+    <div class="node"><span class="num">4</span><strong>Parse AI Score</strong><small>Structured fields</small></div>
+    <div class="node"><span class="num">5</span><strong>Generate Lead ID</strong><small>ID &amp; timestamp</small></div>
+    <div class="node"><span class="num">6</span><strong>Assign Technician</strong><small>Current test: Matra</small></div>
+    <div class="node"><span class="num">7</span><strong>CRM &amp; Routing</strong><small>Sheets + Gmail branches</small></div>
+  </div>
+  <p class="callout">Implementation detail: the CRM append and Switch routing receive the lead from the assignment step as separate branches. The Switch compares <code>lead_temperature</code> with HOT, WARM, and COLD.</p>
+</section>
+<section class="section">
+  <h2>Key workflow components</h2>
+  <div class="grid">
+    <article class="card third"><h3>01 · Data validation</h3><p>Checks required fields, numeric unit count, allowed aircon types, allowed service types, and detects a matching service area in the location text.</p></article>
+    <article class="card third"><h3>02 · AI qualification</h3><p>Gemini returns a lead score, temperature, reason, and recommended follow-up. A parser converts the returned JSON text into usable fields.</p></article>
+    <article class="card third"><h3>03 · Traceability</h3><p>Creates a <code>HAS-...</code> lead reference and timestamp, and adds an assigned-technician field to the lead data.</p></article>
+    <article class="card third"><h3>04 · CRM record</h3><p>Appends the lead information to the <code>Lead CRM</code> worksheet in Google Sheets so the record is available outside the workflow execution.</p></article>
+    <article class="card third"><h3>05 · Notifications</h3><p>Sends a technician notification and uses a Switch node to select a notification branch based on the lead temperature.</p></article>
+    <article class="card third"><h3>06 · Operational controls</h3><p>Tests use sample information and a dedicated mini-workflow so the lead-intake path can be reviewed without running the later booking/GHL stages.</p></article>
+  </div>
+</section>
+<section class="section">
+  <h2>Test scenario and observed output</h2>
+  <div class="grid">
+    <article class="card">
+      <div class="label">Sample input</div><h3>E2E Portfolio Test</h3>
+      <table class="results"><tbody>
+        <tr><th>Location</th><td>Molino 3, Bacoor</td></tr>
+        <tr><th>Aircon type</th><td>Split Type</td></tr>
+        <tr><th>Units</th><td>2</td></tr>
+        <tr><th>Service</th><td>Basic Cleaning</td></tr>
+        <tr><th>Preferred schedule</th><td>November 5, 2026 · 10:00 AM</td></tr>
+        <tr><th>Intent message</th><td>Customer is asking for price and is unsure about scheduling.</td></tr>
+      </tbody></table>
+    </article>
+    <article class="card">
+      <div class="label">Observed output</div><h3>Successful single-lead run</h3>
+      <div class="statgrid">
+        <div class="stat"><strong>80/100</strong><span>Gemini lead score returned</span></div>
+        <div class="stat"><strong>HOT</strong><span>AI classification returned</span></div>
+        <div class="stat"><strong>Matra</strong><span>Fixed technician assignment in test</span></div>
+      </div>
+      <ul class="list">
+        <li>Validation returned <code>valid: true</code> and an empty missing-fields list.</li>
+        <li>AI response was parsed into lead score, temperature, reason, and recommended action.</li>
+        <li>A unique <code>HAS-...</code> lead ID and creation timestamp were generated.</li>
+        <li>The Gmail technician notification executed successfully.</li>
+        <li>A new row was appended to Google Sheets CRM.</li>
+        <li>The HOT notification branch executed in the observed test run.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+<section class="section">
+  <h2>Validation and results</h2>
+  <table class="results"><thead><tr><th>Check</th><th>Evidence from test</th><th>Status</th></tr></thead><tbody>
+    <tr><td>Required-field validation</td><td>All required fields present; <code>missing_fields: []</code></td><td><span class="status pass">Passed</span></td></tr>
+    <tr><td>AI response parsing</td><td>Structured score, temperature, reason, and action visible in final output</td><td><span class="status pass">Passed</span></td></tr>
+    <tr><td>Lead ID generation</td><td>Generated ID in the <code>HAS-YYYYMMDD-XXXXX</code>-style format and timestamp</td><td><span class="status pass">Passed</span></td></tr>
+    <tr><td>Technician assignment</td><td><code>assigned_technician: Matra</code></td><td><span class="status pass">Passed</span></td></tr>
+    <tr><td>Gmail notification</td><td>Technician notification and HOT branch showed successful execution</td><td><span class="status pass">Passed for observed HOT test</span></td></tr>
+    <tr><td>Google Sheets CRM append</td><td>New test record visible in the Lead CRM sheet</td><td><span class="status pass">Passed</span></td></tr>
+    <tr><td>WARM and COLD routes</td><td>Routes are configured, but separate scenario tests have not yet been documented</td><td><span class="status pending">Pending tests</span></td></tr>
+  </tbody></table>
+</section>
+<section class="section">
+  <h2>Lessons learned and next improvements</h2>
+  <div class="caution"><strong>Important finding: score calibration is needed.</strong> The sample message indicates the customer is only asking for pricing and is not yet sure about booking, yet Gemini returned a score of 80 and classified the lead as HOT. The workflow technically ran, but the classification may not reflect the intended business definition of “HOT.” The scoring rubric needs clearer, testable intent rules before this is treated as reliable prioritization.</div>
+  <ul class="list">
+    <li>Define explicit, deterministic scoring criteria for booking intent and validate them against HOT/WARM/COLD sample cases.</li>
+    <li>Test missing fields, invalid unit counts, invalid service values, and out-of-area inquiries.</li>
+    <li>Run separate WARM and COLD test cases and confirm exactly one matching notification branch executes.</li>
+    <li>Replace the fixed technician assignment with availability- or workload-based assignment when the business rules are defined.</li>
+    <li>Add safeguards for duplicate CRM entries and idempotent processing before live use.</li>
+    <li>Continue with booking confirmation, job completion, commission calculation, and GoHighLevel contact/custom-field integration as separate phases.</li>
+  </ul>
+</section>
+<section class="section grid">
+  <article class="card full">
+    <div class="label">Project status</div><h2>Working portfolio prototype — Phase 1–4</h2>
+    <p>This project demonstrates practical workflow design, data validation, AI integration, parsing, routing, email integration, and CRM logging. One end-to-end sample lead has been verified. Additional edge-case and WARM/COLD testing remains before the workflow should be described as robust or production-ready.</p>
+    <p class="muted">Privacy note: example contact details are omitted from this case study. Public evidence screenshots should mask phone numbers, email addresses, credentials, tokens, and any real customer information.</p>
+    <a class="cta" href="mailto:jphipolito2216@gmail.com?subject=Portfolio%20Inquiry%20-%20AI%20Lead%20Qualification%20Automation">Discuss this project</a>
+  </article>
+</section>
+</main>
+<footer class="footer"><div class="wrap">© 2026 Jerome Hipolito · AI Automation Portfolio · Built as a test project with sample data</div></footer>
+</body>
+</html>
